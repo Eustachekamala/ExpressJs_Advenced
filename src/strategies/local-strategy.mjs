@@ -1,6 +1,5 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import { users } from "../utils/constants.mjs";
 import { User } from "../mongoose/schemas/user.mjs";
 import { comparePassword } from "../utils/helpers.mjs";
 
@@ -22,7 +21,7 @@ passport.deserializeUser(async(id, done) => {
     }
 });
 
-passport.use(
+export default passport.use(
     new Strategy(async (username, password, done) => {
         try {
             /**

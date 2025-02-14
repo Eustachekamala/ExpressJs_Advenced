@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt'
-import passport from 'passport';
 
 const saltRounds = 10;
 export const hashPassword = (password) => {
