@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { validationResult, matchedData, checkSchema, query } from 'express-validator';
-import { createUserValidatorSchema, getUserValidatorSchema } from '../validators/validatorSchemas.mjs';
+import { validationResult, checkSchema, query } from 'express-validator';
+import { getUserValidatorSchema } from '../validators/validatorSchemas.mjs';
 import { users } from "../utils/constants.mjs";
 import { resolveIndexByUserId } from "../middlewares/findUserId.mjs";
 import { getUserByIdHandler } from "../handlers/users.mjs";
@@ -51,26 +51,6 @@ router.get('/api/users', query(checkSchema(getUserValidatorSchema)),(req, res) =
  */
 router.get('/api/users/:id', resolveIndexByUserId, getUserByIdHandler);
 
-//POST user
-// router.post('/api/users', checkSchema(createUserValidatorSchema),
-//     (req, res) => {
-//         const  result = validationResult(req)
-//         console.log(result);
-
-//     if(!result.isEmpty())
-//         return res.status(400).send({errors : result.array()});
-//     const data = matchedData(req);
-//     /**
-//      * Creates a new user object with a unique ID.
-//      *
-//      * @constant {Object} newUser - The new user object.
-//      * @property {number} newUser.id - The unique ID for the new user.
-//      * @property {Object} data - The additional data for the new user.
-//      */
-//     const  newUser = { id : users[users.length - 1].id + 1, ...data};
-//     users.push(newUser);
-//     return res.status(201).send(newUser);
-// })
 
 //Update the field of a user
 router.put('/api/users/:id', resolveIndexByUserId,(req, res) => {
