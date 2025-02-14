@@ -11,10 +11,18 @@ import session from 'express-session';
 import { users } from './utils/constants.mjs';
 import passport from 'passport';
 import mongoose from 'mongoose';
-import './strategies/local-strategy.mjs'
+import MongoStore from 'connect-mongo';
+// import './strategies/local-strategy.mjs'
+import './strategies/discord-strategy.mjs';
+import 'dotenv/config'
 
 const app = express();
 const PORT = process.env.PORT || 8000;
+
+// Check if environment variables are set
+if (!PORT) {
+  throw new Error("Missing environment variables for PORT");
+}
 
 mongoose
     .connect('mongodb://localhost/express_tutoriel')
@@ -27,11 +35,14 @@ app.use(cookieParser("helloworld"));
 app.use(session(
     {
         secret : 'eustache the dev',
-        resave : false,
-        saveUninitialized : false,
+        resave : true,
+        saveUninitialized : true,
         cookie : { 
             maxAge : 60000 * 60,
          },
+         store : MongoStore.create({
+            client: mongoose.connection.getClient(),
+         })
     }
 ));
 
@@ -153,6 +164,8 @@ app.get('/api/auth/passport/status', (req, res) => {
     console.log(`Inside /auth/passport/status/ endpoint`);
     console.log(req.user);
     console.log(req.session);
+    console.log(req.sessionID);
+    
     return req.user ? res.send(req.user) : res.sendStatus(401);
 })
 
@@ -163,6 +176,14 @@ app.post("/api/auth/passport/logout", (req, res) => {
         if(err) return res.sendStatus(400);
         res.sendStatus(200);
     })
+})
+
+app.get('/api/auth/passport/discord', passport.authenticate('discord'));
+app.get('/api/auth/passport/discord/redirect', passport.authenticate('discord'), (req, res) => {
+    console.log(req.session);
+    console.log(req.user);
+    
+    res.sendStatus(200);
 })
 
 /**

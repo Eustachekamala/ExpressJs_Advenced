@@ -3,6 +3,7 @@ import { validationResult, matchedData, checkSchema, query } from 'express-valid
 import { createUserValidatorSchema, getUserValidatorSchema } from '../validators/validatorSchemas.mjs';
 import { users } from "../utils/constants.mjs";
 import { resolveIndexByUserId } from "../middlewares/findUserId.mjs";
+import { getUserByIdHandler } from "../handlers/users.mjs";
 
 const router = Router();
 
@@ -48,19 +49,7 @@ router.get('/api/users', query(checkSchema(getUserValidatorSchema)),(req, res) =
  * An array of user objects.
  * @type {Array<{id: number, username: string, displayName: string}>}
  */
-router.get('/api/users/:id', resolveIndexByUserId, (req, res) => {
-    const { findUserIndex } = req;    
-    /**
-     * Finds a user by their ID.
-     *
-     * @param {Array} users - The array of user objects.
-     * @param {number} parsedId - The ID of the user to find.
-     * @returns {Object|undefined} The user object if found, otherwise undefined.
-     */
-    const findUser = users[findUserIndex];
-    if(!findUser) return res.status(404).send({msg : 'User was not found'});
-    return res.send(findUser)
-})
+router.get('/api/users/:id', resolveIndexByUserId, getUserByIdHandler);
 
 //POST user
 // router.post('/api/users', checkSchema(createUserValidatorSchema),
