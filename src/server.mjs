@@ -3,7 +3,7 @@
  * It includes session management, cookie parsing, and user authentication.
  */
 
-import express, { response } from 'express';
+import express from 'express';
 import logger from './middlewares/logger.mjs';
 import routes from './routes/index.mjs';
 import cookieParser from 'cookie-parser';
