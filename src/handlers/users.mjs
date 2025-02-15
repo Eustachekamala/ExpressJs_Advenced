@@ -32,5 +32,4 @@ export const createUserHandler = async (req, res) => {
     } catch (error) {
         return res.sendStatus(400);
     }
-    
 }
